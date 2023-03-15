@@ -1,19 +1,20 @@
 package tornado.event.mod;
 
 import tornado.event.mod.movement.*;
+import tornado.event.mod.render.ClickGUI;
 
 import java.util.ArrayList;
 
 public class ModManager {
 
-    private static ArrayList<Mod> mods;
+    public static ArrayList<Mod> mods;
 
     public ModManager() {
         mods = new ArrayList<Mod>();
         //COMBAT//
 
         //RENDER//
-
+        addMod(new ClickGUI());
         //PLAYER//
 
         //MOVEMENT//

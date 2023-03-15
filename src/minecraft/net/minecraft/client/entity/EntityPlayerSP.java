@@ -592,6 +592,7 @@ public class EntityPlayerSP extends AbstractClientPlayer
     {
         //Tornado onUpdate
         Tornado.modManager.onUpdate();
+        //Tornado.hudManager.onUpdate();
 
         if (this.sprintingTicksLeft > 0)
         {

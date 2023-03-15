@@ -2,6 +2,7 @@ package tornado;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.event.ClickEvent;
+import tornado.ClickGui.ClickGui;
 import tornado.event.EventManager;
 import tornado.event.EventTarget;
 import tornado.event.impl.ClientTick;
@@ -19,10 +20,14 @@ public class Tornado {
     public static ModManager modManager;
     public HudManager hudManager;
 
+
+
+    public ClickGui clickGui;
     public void startup() {
         eventManager = new EventManager();
         modManager = new ModManager();
         hudManager = new HudManager();
+        clickGui = new ClickGui();
         System.out.println("Starting " + namever + "....");
 
         EventManager.register(this);
@@ -55,5 +60,8 @@ public class Tornado {
 
     public String getAuthor() {
         return author;
+    }
+    public final ClickGui getClickGui() {
+        return clickGui;
     }
 }

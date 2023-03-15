@@ -49,4 +49,6 @@ public class HudMod {
     {
         return draggableComponent.getyPosition();
     }
+
+    //public void onUpdate(){}
 }

@@ -17,4 +17,10 @@ public class HudManager {
             m.draw();
         }
     }
+
+    //public void onUpdate() {
+    //   for(HudMod m : hudMods) {
+    //        m.onUpdate();
+    //    }
+    //}
 }
