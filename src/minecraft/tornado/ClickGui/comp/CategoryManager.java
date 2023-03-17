@@ -26,9 +26,4 @@ public class CategoryManager {
 			openDragScreen = true;
 		}
 	}
-
-
-	
-	
-	
 }

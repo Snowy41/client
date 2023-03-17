@@ -15,7 +15,7 @@ import net.minecraft.util.ResourceLocation;
 import tornado.ClickGui.comp.CategoryManager;
 import tornado.ClickGui.comp.ClickGuiCategoryButton;
 import tornado.ClickGui.comp.ModButton;
-import tornado.ClickGui.modSetting.ModSettingManager;
+import tornado.ClickGui.modSetting.ModSettingGui;
 import tornado.Tornado;
 import tornado.event.mod.ModManager;
 import tornado.event.mod.movement.Sprint;
@@ -25,10 +25,10 @@ public class ClickGui extends GuiScreen{
 	public static ArrayList<ClickGuiCategoryButton> clickGuiCategoryButton = new ArrayList<>();
 	
 	public static ArrayList<ModButton> modButtonToRender = new ArrayList<>();
+
 	
 	ScaledResolution sr;
-	private ModSettingManager msManager;
-	
+
 	int backgroundW = 200;
 	int centerW;
 	int centerH;
@@ -36,18 +36,22 @@ public class ClickGui extends GuiScreen{
 	int buttonCount;
 
 	ResourceLocation logo = new ResourceLocation("tornado/logo.png");
-	
-	
+	public static boolean shouldDisplay = false;
+	public ArrayList<ModSettingGui> modSettingRender = new ArrayList<>();
+
+
+
 	@Override
 	public void initGui() {
 		//Enable Minecrafts blur shader
 		mc.entityRenderer.loadShader(new ResourceLocation("shaders/post/menu_blur.json"));
-		
+
 		sr = new ScaledResolution(mc);
 		centerW = sr.getScaledWidth()/2;
 		centerH = sr.getScaledHeight()/2;
 		reset();
 		buttonCount = 0;
+		shouldDisplay = false;
 		this.clickGuiCategoryButton.add(new ClickGuiCategoryButton(centerW - 200, centerH - 65,100,20,  "Combat",0));
 		this.clickGuiCategoryButton.add(new ClickGuiCategoryButton(centerW - 200, centerH - 45,100,20,  "Render",1));
 		this.clickGuiCategoryButton.add(new ClickGuiCategoryButton(centerW - 200, centerH - 25,100,20,  "Player",2));
@@ -65,11 +69,14 @@ public class ClickGui extends GuiScreen{
 		//Player = id2
 		this.modButtonToRender.add(new ModButton(centerW,centerH, modButtonW, modButtonH, ModManager.mods.get(1) ,3));
 
+
 		//Movement = id3
 
 		//this.modButtonToRender.add(new ModButton(centerW,centerH, modButtonW, modButtonH, ModInstances.getModTargetHUD(),3));
-		
-		msManager = new ModSettingManager(centerW,centerH);
+
+		for(ModButton modButton : modButtonToRender) {
+			this.modSettingRender.add(new ModSettingGui(modButton.mod, modButton));
+		}
 	}
 	@Override
     public void onGuiClosed() {
@@ -81,19 +88,17 @@ public class ClickGui extends GuiScreen{
 	
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-
-		
 		super.drawScreen(mouseX, mouseY, partialTicks);
 		//update center w
 		centerW = sr.getScaledWidth()/2;
 		centerH = sr.getScaledHeight()/2;
 		
-		GlStateManager.pushAttrib(); //idk why i do this i sohuld learn gl
+		GlStateManager.pushAttrib();
 		GlStateManager.pushMatrix();
 		Gui.drawRoundedRect(centerW - backgroundW, centerH - 100, centerW + backgroundW, centerH + 100, 8, new Color(26, 26, 26,255).getRGB());
 		Gui.drawRoundedRect(centerW - backgroundW + 390, centerH - 100, centerW + backgroundW, centerH + 100, 8, new Color(32, 219, 155,255).getRGB());
 		GlStateManager.popMatrix();
-		msManager.render();
+
 
 		Gui.drawRoundedRect(centerW - backgroundW, centerH - 100, centerW - backgroundW + 100, centerH - 65,  6, new Color(21, 140, 99,255).getRGB());
 		Gui.drawRoundedRect(centerW - backgroundW + 1, centerH - 100 + 1, centerW - backgroundW + 100 - 1, centerH - 65 - 1,  6, new Color(26, 26, 26,255).getRGB());
@@ -102,7 +107,16 @@ public class ClickGui extends GuiScreen{
 		for(ClickGuiCategoryButton clickGuiCategoryButton :clickGuiCategoryButton) {
 			clickGuiCategoryButton.renderButton();
 		}
-		
+
+		for(ModSettingGui modSettingGui : modSettingRender) {
+			if(modSettingGui.button.id == CategoryManager.currentPage) {
+				if(shouldDisplay) {
+					modSettingGui.render();
+				}
+			}
+		}
+
+
 		int wheel = Mouse.getDWheel();
         for (ModButton modButton : modButtonToRender) {
         	if(modButton.id == CategoryManager.currentPage) {
@@ -132,18 +146,25 @@ public class ClickGui extends GuiScreen{
 	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
 		super.mouseClicked(mouseX, mouseY, mouseButton);
+
 		if(mouseX >= (centerW - backgroundW) && mouseX <= (centerW + backgroundW) && mouseY >= (centerH - 90) && mouseY <= (centerH + 90)) {
 			for(ModButton modButton : modButtonToRender) {
 				if(modButton.id == CategoryManager.currentPage) {
 					modButton.onClick(mouseX, mouseY, mouseButton);
+					if(mouseButton == 1) {
+						shouldDisplay = !shouldDisplay;
+					}
+				} else {
+					shouldDisplay = false;
 				}
 			}
+		}else {
+			shouldDisplay = false;
 		}
-		
+
 		for(ClickGuiCategoryButton clickGuiCategoryButton :clickGuiCategoryButton) {
 			clickGuiCategoryButton.onClick(mouseX, mouseY, mouseButton);
 		}
-		
 	}
 	public static ArrayList<ClickGuiCategoryButton> getClickGuiCategoryButton() {
 		return clickGuiCategoryButton;
@@ -158,7 +179,6 @@ public class ClickGui extends GuiScreen{
 	private static void reset() {
 		modButtonToRender.removeAll(modButtonToRender);
 		clickGuiCategoryButton.removeAll(clickGuiCategoryButton);
-		
 	}
 	
 	private void glScissor(double x, double y, double width, double height) {

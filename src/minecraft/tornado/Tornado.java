@@ -1,7 +1,6 @@
 package tornado;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.event.ClickEvent;
 import tornado.ClickGui.ClickGui;
 import tornado.event.EventManager;
 import tornado.event.EventTarget;
@@ -19,7 +18,6 @@ public class Tornado {
     public EventManager eventManager;
     public static ModManager modManager;
     public HudManager hudManager;
-
 
 
     public ClickGui clickGui;
