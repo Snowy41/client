@@ -1,10 +1,14 @@
 package tornado.gui.auth;
 
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.util.ResourceLocation;
 import tornado.gui.auth.microsoft.GuiLoginMicrosoft;
 import tornado.gui.auth.mojang.GuiLoginMojang;
+
+import java.awt.*;
 
 
 public class AltManagerGui extends GuiScreen {
@@ -17,6 +21,11 @@ public class AltManagerGui extends GuiScreen {
 
     @Override
     public void initGui() {
+
+        mc.getTextureManager().bindTexture(new ResourceLocation("tornado/main_menu_bg.png"));
+        drawModalRectWithCustomSizedTexture(0,0,0,0, this.width, this.height, this.width, this.height);
+        this.drawGradientRect(0, height - 100, width, height, new Color(0, 0, 0, 187).getRGB(), new Color(0,0,0, 108).getRGB());
+
         this.buttonList.add(new GuiButton(0, width / 2 + 4 + 50, height - 24, 100, 20, "Cancel"));
         this.buttonList.add(new GuiButton(1, width / 2 + 4 + 50, height - 48, 100, 20, "Use Cracked"));
         this.buttonList.add(new GuiButton(2, width / 2 - 50, height - 48, 100, 20, "Use Microsoft"));

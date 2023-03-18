@@ -1816,7 +1816,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
         this.mc.mcProfiler.endStartSection("hand");
 
         //Tornado
-        Tornado.modManager.onRender();
+        Tornado.instance.modManager.onRender();
 
         if (this.renderHand && !Shaders.isShadowPass)
         {

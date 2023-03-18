@@ -1,69 +1,40 @@
 package tornado.event.mod.render;
 
-import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.MapItemRenderer;
-import net.minecraft.client.gui.inventory.GuiInventory;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItemFrame;
-import net.minecraft.util.ResourceLocation;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
-import tornado.event.mod.HudMod;
+import tornado.Tornado;
+import tornado.event.mod.Category;
+import tornado.event.mod.Mod;
 
 import java.awt.*;
 import java.util.ArrayList;
 
-public class TargetHUD extends HudMod {
+public class TargetHUD extends Mod {
     EntityLivingBase target;
-
-    Color color = new Color(0,0,0,170);
     private ArrayList<Long> clicks = new ArrayList<Long>();
     private boolean wasPressed;
     private long lastPressed;
-
-    EntityLivingBase savedTarget;
-
+    FontRenderer fr = Tornado.instance.mc.fontRendererObj;
     public TargetHUD() {
-        super("TargetHUD", 150, 150);
+        super("TargetHUD", "Enables Target-HUD", Category.RENDER, Keyboard.KEY_NONE);
     }
 
-    private static final ResourceLocation HEALTH_BAR_TEXTURE = new ResourceLocation("tornado/health_bar.png");
-    private static final int MAX_HEALTH = 40;
 
     @Override
     public void draw() {
-        renderTargetHud();;
         super.draw();
-    }
-
-    @Override
-    public void renderDummy(int mouseX, int mouseY) {
-        Gui.drawRect(getX(), getY(), getX() + getWidth(), getY() + getHeight(), color.getRGB());
-        if(target == null) {
-            fr.drawStringWithShadow(mc.thePlayer.getName(), getX() + 2, getY() + 2, -1);
-            fr.drawStringWithShadow(mc.thePlayer.getHealth() + " \u2764", getX() + 2, getY() + 2 + fr.FONT_HEIGHT, -1);
-            GuiInventory.drawEntityOnScreen(getX() + getPlayerNameWidth() + 25, getY() + 30, 20, 50, 0, mc.thePlayer);
-        } else {
-            fr.drawStringWithShadow(target.getName(), getX() + 2, getY() + 2, -1);
-            fr.drawStringWithShadow(target.getHealth() + " \u2764", getX() + 2, getY() + 2 + fr.FONT_HEIGHT, -1);
-            GuiInventory.drawEntityOnScreen(getX() + getNameWidth() + 25, getY() + 30, 20, 50, 0, target);
+        if(enabled) {
+            renderTargetHud();
         }
-
-
-        super.renderDummy(mouseX, mouseY);
     }
-    @Override
     public int getWidth() {
         if(target != null) {
             return fr.getStringWidth(target.getName()) + 70;
-        }else{
-            return 0;
-        }
-
-    }
-    public int getNameWidth () {
-        if(target != null) {
-            return fr.getStringWidth(target.getName());
         }else{
             return 0;
         }
@@ -77,7 +48,6 @@ public class TargetHUD extends HudMod {
         }
 
     }
-    @Override
     public int getHeight() {
         return fr.FONT_HEIGHT * 2 + 15;
     }
@@ -113,10 +83,10 @@ public class TargetHUD extends HudMod {
     private void renderHealthBar(EntityLivingBase target) {
         Gui.drawRoundedRect(getX() + 27, getY() + 27, getX() + 120,getY() + 35,8,  new Color(19, 19, 19).getRGB());
         if(target.getHealth() > 5) {
-            Gui.drawRoundedRect(getX() + 27, getY() + 27, getX() + 27 + (int)( 93 * (target.getHealth() / target.getMaxHealth())),getY() +35, 8, new Color(27, 185, 130).getRGB());
+            Gui.drawRoundedRect(getX() + 27, getY() + 27, getX() + 27 + (int)( 93 * (target.getHealth() / target.getMaxHealth())),getY() + 35, 8, new Color(27, 185, 130).getRGB());
 
         } else {
-            Gui.drawRoundedRect(getX() + 27, getY() + 27, getX() + 27 + (int)( 93 * (target.getHealth() / target.getMaxHealth())),getY() +35,8 ,new Color(96, 18, 18).getRGB());
+            Gui.drawRoundedRect(getX() + 27, getY() + 27, getX() + 27 + (int)( 93 * (target.getHealth() / target.getMaxHealth())),getY() + 35,8 ,new Color(96, 18, 18).getRGB());
 
         }
     }
@@ -127,6 +97,15 @@ public class TargetHUD extends HudMod {
         return this.clicks.size();
     }
 
+    public int getX() {
+        ScaledResolution sr = new ScaledResolution(Tornado.instance.mc);
+        return sr.getScaledWidth()/2;
+    }
+
+    public int getY () {
+        ScaledResolution sr = new ScaledResolution(Tornado.instance.mc);
+        return sr.getScaledHeight() / 2;
+    }
 }
 
 

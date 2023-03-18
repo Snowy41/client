@@ -2,12 +2,13 @@ package tornado.ClickGui.comp;
 
 import java.awt.Color;
 
+import tornado.ClickGui.manager.CategoryManager;
+import tornado.Tornado;
 import tornado.utils.AnimationEngine;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import tornado.utils.RoundedUtil;
 
-public class ClickGuiCategoryButton extends CategoryManager{
+public class ClickGuiCategoryButton extends CategoryManager {
 	public int x,y,w,h,r;
 	private String name;
 	private boolean isOnThisPage = false;
@@ -59,6 +60,7 @@ public class ClickGuiCategoryButton extends CategoryManager{
 			animation.setIsDrawAnimation(true);
 			this.isOnThisPage = true;
 			CategoryManager.thisPage(number);
+			Tornado.instance.clickGui.shouldDisplay = false;
 		}
 	}
 	

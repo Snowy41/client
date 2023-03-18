@@ -2,6 +2,8 @@ package tornado.event.mod;
 
 import net.minecraft.client.Minecraft;
 import org.lwjgl.input.Keyboard;
+import tornado.ClickGui.comp.settings.Setting;
+import tornado.Tornado;
 
 public class Mod {
 
@@ -17,6 +19,10 @@ public class Mod {
         this.category = category;
         this.key = key;
         this.enabled = false;
+        setup();
+    }
+    public void setup() {
+
     }
 
     public void toggle() {
@@ -82,5 +88,16 @@ public class Mod {
 
     public void setKey(int key) {
         this.key = key;
+    }
+
+    protected final void rSetting(Setting setting) {
+        if(setting != null)
+            Tornado.instance.getSettingsManager().rSetting(setting);
+    }
+    protected final Setting getSetting(String name) {
+        return Tornado.instance.getSettingsManager().getSettingByName(name);
+    }
+    public void draw() {
+
     }
 }

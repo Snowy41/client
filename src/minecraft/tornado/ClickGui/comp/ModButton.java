@@ -5,13 +5,15 @@ import java.awt.Color;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
+import tornado.ClickGui.ClickGui;
+import tornado.Tornado;
 import tornado.event.mod.Mod;
 
 
 public class ModButton {
 
 	public int x, y;
-	public static int w, h;
+	public int w, h;
 	public Mod mod;
 	public int id;
 
@@ -29,6 +31,13 @@ public class ModButton {
 		Gui.drawRoundedRect(x, y, x + w, y + h, 8, new Color(33, 33, 33, 255).getRGB());
 		//Toggle Button
 		Gui.drawRoundedRect((x + w) - 28, (y + h) - 18, (x + w) - 5, (y + h) - 7, 8, getColor());
+		//Render Slider on either side depending on "enabled"
+		if(mod.enabled) {
+			Gui.drawRoundedRect((x + w) - 14, (y + h) - 16, (x + w) - 7, (y + h) - 9, 8, new Color(26, 26, 26, 255).getRGB());
+
+		} else {
+			Gui.drawRoundedRect((x + w) - 26, (y + h) - 16, (x + w) - 19, (y + h) - 9, 8, new Color(23, 23, 23, 255).getRGB());
+		}
 
 		Minecraft.getMinecraft().fontRendererObj.drawString(mod.name, x + 8, y + 8, new Color(245, 245, 245, 255).getRGB());
 	}
@@ -42,14 +51,17 @@ public class ModButton {
 	public void onClick(int mouseX, int mouseY, int button) {
 		if (button == 0) {
 			if (mouseX >= x && mouseX <= x + w && mouseY >= y && mouseY <= y + h) {
-				if (mod.isEnabled()) {
-					mod.setEnabled(false);
-				} else {
-					mod.setEnabled(true);
+				if(mod.enabled) {
+					Tornado.instance.clickGui.shouldDisplay = false;
 				}
+				mod.setEnabled(!mod.isEnabled());
+			}
+		} else if (button == 1) {
+			if (!(mouseX >= x && mouseX <= x + w && mouseY >= y && mouseY <= y + h)) {
+				Tornado.instance.clickGui.shouldDisplay = false;
 			}
 		}
 	}
-	public static int getW() {return w;}
+	public int getW() {return w;}
 	public int getH() {return h;}
 }

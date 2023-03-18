@@ -2,6 +2,7 @@ package tornado.event.mod;
 
 import tornado.event.mod.movement.*;
 import tornado.event.mod.render.ClickGUI;
+import tornado.event.mod.render.TargetHUD;
 
 import java.util.ArrayList;
 
@@ -15,6 +16,7 @@ public class ModManager {
 
         //RENDER//
         addMod(new ClickGUI());
+        addMod(new TargetHUD());
         //PLAYER//
 
         //MOVEMENT//
@@ -36,6 +38,12 @@ public class ModManager {
     public static void onRender() {
         for (Mod m : mods) {
             m.onRender();
+        }
+    }
+
+    public static void onDraw() {
+        for (Mod m : mods) {
+            m.draw();
         }
     }
 

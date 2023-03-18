@@ -16,9 +16,9 @@ import net.minecraft.world.gen.ChunkProviderSettings;
 public class GuiCustomizeWorldScreen extends GuiScreen implements GuiSlider.FormatHelper, GuiPageButtonList.GuiResponder
 {
     private GuiCreateWorld field_175343_i;
-    protected String field_175341_a = "Customize World Settings";
+    protected String field_175341_a = "Customize World Setting";
     protected String field_175333_f = "Page 1 of 3";
-    protected String field_175335_g = "Basic Settings";
+    protected String field_175335_g = "Basic Setting";
     protected String[] field_175342_h = new String[4];
     private GuiPageButtonList field_175349_r;
     private GuiButton field_175348_s;

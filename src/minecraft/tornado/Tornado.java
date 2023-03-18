@@ -2,12 +2,9 @@ package tornado;
 
 import net.minecraft.client.Minecraft;
 import tornado.ClickGui.ClickGui;
+import tornado.ClickGui.manager.SettingsManager;
 import tornado.event.EventManager;
-import tornado.event.EventTarget;
-import tornado.event.impl.ClientTick;
-import tornado.event.mod.HudManager;
 import tornado.event.mod.ModManager;
-import tornado.hud.HUDConfigScreen;
 
 public class Tornado {
 
@@ -16,15 +13,15 @@ public class Tornado {
     public Minecraft mc = Minecraft.getMinecraft();
 
     public EventManager eventManager;
-    public static ModManager modManager;
-    public HudManager hudManager;
+    public ModManager modManager;
+    public SettingsManager settingsManager;
 
 
     public ClickGui clickGui;
     public void startup() {
         eventManager = new EventManager();
+        settingsManager = new SettingsManager();
         modManager = new ModManager();
-        hudManager = new HudManager();
         clickGui = new ClickGui();
         System.out.println("Starting " + namever + "....");
 
@@ -38,12 +35,6 @@ public class Tornado {
         eventManager.unregister(this);
     }
 
-    @EventTarget
-    public void onTick(ClientTick event) {
-        if(mc.gameSettings.HUD_CONFIG.isPressed()) {
-            mc.displayGuiScreen(new HUDConfigScreen());
-        }
-    }
     public String getNamever() {
         return namever;
     }
@@ -61,5 +52,9 @@ public class Tornado {
     }
     public final ClickGui getClickGui() {
         return clickGui;
+    }
+
+    public SettingsManager getSettingsManager() {
+        return settingsManager;
     }
 }

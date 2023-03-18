@@ -1,6 +1,9 @@
 package tornado.event.mod.movement;
 
+import com.google.common.eventbus.Subscribe;
 import org.lwjgl.input.Keyboard;
+import tornado.ClickGui.comp.settings.Setting;
+import tornado.Tornado;
 import tornado.event.mod.Category;
 import tornado.event.mod.Mod;
 
@@ -10,6 +13,11 @@ public class Sprint extends Mod {
         super("Sprint", "Auto Sprint", Category.MOVEMENT, Keyboard.KEY_F);
     }
 
+    @Override
+    public void setup() {
+        super.setup();
+        rSetting(new Setting("Check-Test", this, false));
+    }
     public void onEnable() {
         if(this.isEnabled()) {
             mc.thePlayer.setSprinting(true);

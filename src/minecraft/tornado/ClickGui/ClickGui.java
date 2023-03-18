@@ -12,13 +12,18 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
-import tornado.ClickGui.comp.CategoryManager;
 import tornado.ClickGui.comp.ClickGuiCategoryButton;
 import tornado.ClickGui.comp.ModButton;
+import tornado.ClickGui.comp.settings.Checkbox;
+import tornado.ClickGui.comp.settings.Comp;
+import tornado.ClickGui.comp.settings.Setting;
+import tornado.ClickGui.manager.CategoryManager;
+import tornado.ClickGui.manager.SettingsManager;
 import tornado.ClickGui.modSetting.ModSettingGui;
 import tornado.Tornado;
+import tornado.event.mod.Mod;
 import tornado.event.mod.ModManager;
-import tornado.event.mod.movement.Sprint;
+
 
 public class ClickGui extends GuiScreen{
 
@@ -38,6 +43,8 @@ public class ClickGui extends GuiScreen{
 	ResourceLocation logo = new ResourceLocation("tornado/logo.png");
 	public static boolean shouldDisplay = false;
 	public ArrayList<ModSettingGui> modSettingRender = new ArrayList<>();
+
+	public ArrayList<Comp> comps = new ArrayList<>();
 
 
 
@@ -65,9 +72,9 @@ public class ClickGui extends GuiScreen{
 		//Combat = id0
 
 		//render = id1
-
+		this.modButtonToRender.add(new ModButton(centerW,centerH, modButtonW, modButtonH, Tornado.instance.modManager.mods.get(1) ,1));
 		//Player = id2
-		this.modButtonToRender.add(new ModButton(centerW,centerH, modButtonW, modButtonH, ModManager.mods.get(1) ,3));
+		this.modButtonToRender.add(new ModButton(centerW,centerH, modButtonW, modButtonH, Tornado.instance.modManager.mods.get(2) ,3));
 
 
 		//Movement = id3
@@ -107,34 +114,37 @@ public class ClickGui extends GuiScreen{
 		for(ClickGuiCategoryButton clickGuiCategoryButton :clickGuiCategoryButton) {
 			clickGuiCategoryButton.renderButton();
 		}
-
+		int wheel = Mouse.getDWheel();
 		for(ModSettingGui modSettingGui : modSettingRender) {
 			if(modSettingGui.button.id == CategoryManager.currentPage) {
-				if(shouldDisplay) {
-					modSettingGui.render();
-				}
-			}
-		}
-
-
-		int wheel = Mouse.getDWheel();
-        for (ModButton modButton : modButtonToRender) {
-        	if(modButton.id == CategoryManager.currentPage) {
-				buttonCount++;
+				buttonCount = modButtonToRender.size();
 				if(buttonCount > 8) {
 					GL11.glEnable(GL11.GL_SCISSOR_TEST);
 					this.glScissor(centerW - backgroundW, centerH - 90, centerW + backgroundW, 180);
-					modButton.render();
+					modSettingGui.button.render();
+					if(shouldDisplay) {
+						modSettingGui.render();
+						for (Comp comp : comps) {
+							comp.drawScreen(mouseX, mouseY);
+						}
+					}
 					if (wheel < 0) {
-						modButton.y -= 8;
+						modSettingGui.button.y -= 8;
 					} else if (wheel > 0) {
-						modButton.y += 8;
+						modSettingGui.button.y += 8;
 					}
 					GL11.glDisable(GL11.GL_SCISSOR_TEST);
+				} else {
+					modSettingGui.button.render();
+					if(shouldDisplay) {
+						modSettingGui.render();
+						for (Comp comp : comps) {
+							comp.drawScreen(mouseX, mouseY);
+						}
+					}
 				}
-        	}
-        }
-
+			}
+		}
 
 		mc.getTextureManager().bindTexture(logo);
 		Gui.drawModalRectWithCustomSizedTexture(centerW - backgroundW + 20, centerH + 30, 0, 0, 64 , 64, 64,64);
@@ -146,22 +156,32 @@ public class ClickGui extends GuiScreen{
 	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
 		super.mouseClicked(mouseX, mouseY, mouseButton);
-
 		if(mouseX >= (centerW - backgroundW) && mouseX <= (centerW + backgroundW) && mouseY >= (centerH - 90) && mouseY <= (centerH + 90)) {
 			for(ModButton modButton : modButtonToRender) {
 				if(modButton.id == CategoryManager.currentPage) {
 					modButton.onClick(mouseX, mouseY, mouseButton);
 					if(mouseButton == 1) {
 						shouldDisplay = !shouldDisplay;
+						int sOffset = 0;
+						comps.clear();
+						if (Tornado.instance.getSettingsManager().getSettingsByMod(modButton.mod) != null) {
+							for (Setting setting : Tornado.instance.getSettingsManager().getSettingsByMod(modButton.mod)) {
+								Mod selectedModule = modButton.mod;
+								if (setting.isCheck()) {
+									comps.add(new Checkbox(0, sOffset, this, selectedModule, setting));
+									sOffset += 15;
+								}
+							}
+						}
 					}
-				} else {
-					shouldDisplay = false;
 				}
 			}
 		}else {
 			shouldDisplay = false;
 		}
-
+		for (Comp comp : comps) {
+			comp.mouseClicked(mouseX, mouseY, mouseButton);
+		}
 		for(ClickGuiCategoryButton clickGuiCategoryButton :clickGuiCategoryButton) {
 			clickGuiCategoryButton.onClick(mouseX, mouseY, mouseButton);
 		}

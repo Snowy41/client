@@ -1801,7 +1801,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
                     }
                     else
                     {
-                        Tornado.modManager.onKey(k);
+                        Tornado.instance.modManager.onKey(k);
                         if (k == 1)
                         {
                             this.displayInGameMenu();

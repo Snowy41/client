@@ -44,7 +44,7 @@ import net.minecraft.util.StringUtils;
 import net.minecraft.world.border.WorldBorder;
 import net.optifine.CustomColors;
 import tornado.Tornado;
-import tornado.hud.HUDConfigScreen;
+import tornado.event.mod.ModManager;
 
 public class GuiIngame extends Gui
 {
@@ -329,10 +329,7 @@ public class GuiIngame extends Gui
             this.overlayPlayerList.updatePlayerList(false);
         }
 
-
-        if(!(mc.currentScreen instanceof HUDConfigScreen)) {
-            Tornado.instance.hudManager.renderMods();
-        }
+        ModManager.onDraw();
 
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         GlStateManager.disableLighting();
