@@ -4,6 +4,8 @@ import java.awt.Color;
 
 import tornado.ClickGui.manager.CategoryManager;
 import tornado.Tornado;
+import tornado.event.mod.Category;
+import tornado.event.mod.Mod;
 import tornado.utils.AnimationEngine;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -11,13 +13,14 @@ import net.minecraft.client.gui.Gui;
 public class ClickGuiCategoryButton extends CategoryManager {
 	public int x,y,w,h,r;
 	private String name;
+	public Category category;
 	private boolean isOnThisPage = false;
 	//this is use for the categorymanager toknow which page this is on
 	private int number = 0;
 	CategoryManager categoryManager;
 	
 	private AnimationEngine animation = new AnimationEngine(x, x+w, 500,false);
-	
+
 	public ClickGuiCategoryButton(int x, int y, int w, int h, String name, int number) {
 		this.x = x;
 		this.y = y;
@@ -26,9 +29,8 @@ public class ClickGuiCategoryButton extends CategoryManager {
 		this.name = name;
 		this.number = number;
 		animation.AnimationUpdateValue(x, x+w, 500,false);
-		
+
 	}
-	
 
 
 
@@ -60,7 +62,18 @@ public class ClickGuiCategoryButton extends CategoryManager {
 			animation.setIsDrawAnimation(true);
 			this.isOnThisPage = true;
 			CategoryManager.thisPage(number);
-			Tornado.instance.clickGui.shouldDisplay = false;
+			for(ModButton modButton : Tornado.instance.clickGui.modButtonToRenderCombat) {
+				modButton.open = false;
+			}
+			for(ModButton modButton : Tornado.instance.clickGui.modButtonToRenderRender) {
+				modButton.open = false;
+			}
+			for(ModButton modButton : Tornado.instance.clickGui.modButtonToRenderPlayer) {
+				modButton.open = false;
+			}
+			for(ModButton modButton : Tornado.instance.clickGui.modButtonToRenderMovement) {
+				modButton.open = false;
+			}
 		}
 	}
 	

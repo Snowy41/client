@@ -22,9 +22,24 @@ public class Checkbox extends Comp{
     }
 
     @Override
-    public void drawScreen(int mouseX, int mouseY) {
-        super.drawScreen(mouseX, mouseY);
-        for(ModButton mod : Tornado.instance.clickGui.modButtonToRender) {
+    public void drawScreen() {
+        super.drawScreen();
+        for(ModButton mod : Tornado.instance.clickGui.modButtonToRenderCombat) {
+            if(mod.mod == module) {
+                modButton = mod;
+            }
+        }
+        for(ModButton mod : Tornado.instance.clickGui.modButtonToRenderRender) {
+            if(mod.mod == module) {
+                modButton = mod;
+            }
+        }
+        for(ModButton mod : Tornado.instance.clickGui.modButtonToRenderPlayer) {
+            if(mod.mod == module) {
+                modButton = mod;
+            }
+        }
+        for(ModButton mod : Tornado.instance.clickGui.modButtonToRenderMovement) {
             if(mod.mod == module) {
                 modButton = mod;
             }

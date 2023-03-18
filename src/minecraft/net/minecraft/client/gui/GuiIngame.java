@@ -329,7 +329,7 @@ public class GuiIngame extends Gui
             this.overlayPlayerList.updatePlayerList(false);
         }
 
-        ModManager.onDraw();
+        Tornado.instance.modManager.onDraw();
 
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         GlStateManager.disableLighting();
